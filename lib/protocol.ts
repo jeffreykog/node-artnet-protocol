@@ -152,9 +152,9 @@ export class ArtDmx extends ArtNetPacket {
     sequence: number;
     physical: number;
     universe: number;
-    data: number[] | Uint8Array;
+    data: number[];
 
-    constructor(protocolVersion: number, sequence: number, physical: number, universe: number, data: number[] | Uint8Array) {
+    constructor(protocolVersion: number, sequence: number, physical: number, universe: number, data: number[]) {
         super();
         this.protocolVersion = protocolVersion;
         this.sequence = sequence;

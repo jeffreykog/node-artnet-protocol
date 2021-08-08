@@ -124,7 +124,7 @@ class ArtNetController extends EventEmitter {
 exports.ArtNetController = ArtNetController;
 class ArtNetUniverse {
     constructor(controller, universe, size) {
-        this.renderCache = new Uint8Array(512);
+        this.renderCache = [];
         this.controller = controller;
         this.universe = universe;
         this.size = size || 512;

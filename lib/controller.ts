@@ -161,7 +161,7 @@ export class ArtNetUniverse {
 
     private renderInterval?: Timeout;
 
-    private readonly renderCache = new Uint8Array(512);
+    private readonly renderCache: number[] = [];
 
     constructor(controller: ArtNetController, universe: number, size?: number) {
         this.controller = controller;
