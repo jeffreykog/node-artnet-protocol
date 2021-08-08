@@ -19,8 +19,9 @@ const EventEmitter = require("events");
 const PORT = 6454;
 const FRAMES_PER_SECOND = 44;
 class ArtNetController extends EventEmitter {
-    constructor() {
+    constructor(isController = false) {
         super();
+        this.isController = isController;
         const interfaces = os.networkInterfaces();
         const prefixes = {};
         Object.entries(interfaces).forEach(([ifName, addresses]) => {
@@ -82,7 +83,9 @@ class ArtNetController extends EventEmitter {
             socketUnicast.bind(PORT, unicastAddress);
             this.socketUnicast = socketUnicast;
         }
-        this.intervalArtPoll = setInterval(this.artPollTimer.bind(this), 5000);
+        if (this.isController) {
+            this.intervalArtPoll = setInterval(this.artPollTimer.bind(this), 5000);
+        }
         if (this.unicastAddress != null) {
             this.sendBroadcastPacket(new protocol_1.ArtPollReply(this.unicastAddress, PORT, 0, 0, 0, 0xffff, 0));
         }
@@ -104,6 +107,9 @@ class ArtNetController extends EventEmitter {
     }
     close() {
         return __awaiter(this, void 0, void 0, function* () {
+            if (this.intervalArtPoll) {
+                clearInterval(this.intervalArtPoll);
+            }
             yield Promise.all([
                 new Promise((resolve) => { var _a; return (_a = this.socketBroadcast) === null || _a === void 0 ? void 0 : _a.close(() => resolve(undefined)); }),
                 new Promise((resolve) => { var _a; return (_a = this.socketUnicast) === null || _a === void 0 ? void 0 : _a.close(() => resolve(undefined)); }),

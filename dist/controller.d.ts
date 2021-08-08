@@ -4,13 +4,14 @@ import { ArtNetPacket } from './protocol';
 import EventEmitter = require('events');
 export declare class ArtNetController extends EventEmitter {
     private readonly interfacePrefixes;
+    private readonly isController;
     socketUnicast?: Socket;
     socketBroadcast?: Socket;
     private broadcastAddress?;
     private unicastAddress?;
     private universes;
     private intervalArtPoll?;
-    constructor();
+    constructor(isController?: boolean);
     bind(host?: string): void;
     createUniverse(index: number): ArtNetUniverse;
     sendBroadcastPacket(packet: ArtNetPacket): void;

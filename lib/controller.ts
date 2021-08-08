@@ -13,6 +13,8 @@ const FRAMES_PER_SECOND = 44;
 export class ArtNetController extends EventEmitter {
 
     private readonly interfacePrefixes: { [key: string]: ip6addr.CIDR };
+    private readonly isController: boolean;
+
     socketUnicast?: Socket;
     socketBroadcast?: Socket;
 
@@ -23,8 +25,10 @@ export class ArtNetController extends EventEmitter {
 
     private intervalArtPoll?: Timeout;
 
-    constructor() {
+    constructor(isController: boolean = false) {
         super();
+
+        this.isController = isController;
 
         const interfaces = os.networkInterfaces();
         const prefixes: { [key: string]: ip6addr.CIDR }  = {};
@@ -89,7 +93,9 @@ export class ArtNetController extends EventEmitter {
             this.socketUnicast = socketUnicast;
         }
 
-        this.intervalArtPoll = setInterval(this.artPollTimer.bind(this), 5000);
+        if (this.isController) {
+            this.intervalArtPoll = setInterval(this.artPollTimer.bind(this), 5000);
+        }
 
         // Send ArtPollReply message to interface on startup, announcing ShowMaster as a controller.
         if (this.unicastAddress != null) {
@@ -116,6 +122,9 @@ export class ArtNetController extends EventEmitter {
     }
 
     public async close() {
+        if (this.intervalArtPoll) {
+            clearInterval(this.intervalArtPoll);
+        }
         await Promise.all([
             new Promise((resolve) => this.socketBroadcast?.close(() => resolve(undefined))),
             new Promise((resolve) => this.socketUnicast?.close(() => resolve(undefined))),
