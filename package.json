@@ -1,0 +1,32 @@
+{
+  "name": "artnet-protocol",
+  "version": "0.1.0",
+  "description": "Protocol implementation for ArtNet",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeffreykog/node-artnet-protocol.git"
+  },
+  "keywords": [
+    "artnet",
+    "dmx"
+  ],
+  "author": "Jeffrey Kog <jeffrey@kog.nl>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeffreykog/node-artnet-protocol/issues"
+  },
+  "homepage": "https://github.com/jeffreykog/node-artnet-protocol#readme",
+  "dependencies": {
+    "ip6addr": "^0.2.3"
+  },
+  "devDependencies": {
+    "@types/ip6addr": "^0.2.2",
+    "@types/node": "^15.6.1",
+    "typescript": "^4.3.2"
+  }
+}
