@@ -115,6 +115,13 @@ export class ArtNetController extends EventEmitter {
         this.sendBroadcastPacket(new ArtPoll(14, true, true, true, false, DP_ALL));
     }
 
+    public async close() {
+        await Promise.all([
+            new Promise((resolve) => this.socketBroadcast?.close(() => resolve(undefined))),
+            new Promise((resolve) => this.socketUnicast?.close(() => resolve(undefined))),
+        ]);
+    }
+
     private onSocketError(err: Error) {
 
     }

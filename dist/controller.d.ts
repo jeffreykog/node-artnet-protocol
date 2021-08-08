@@ -15,6 +15,7 @@ export declare class ArtNetController extends EventEmitter {
     createUniverse(index: number): ArtNetUniverse;
     sendBroadcastPacket(packet: ArtNetPacket): void;
     private artPollTimer;
+    close(): Promise<void>;
     private onSocketError;
     private onSocketBroadcastListening;
     private onSocketMessage;
