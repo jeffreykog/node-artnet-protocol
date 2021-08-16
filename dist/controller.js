@@ -21,6 +21,8 @@ const FRAMES_PER_SECOND = 44;
 class ArtNetController extends EventEmitter {
     constructor(isController = false) {
         super();
+        this.nameShort = 'NodeArtNetProto';
+        this.nameLong = 'https://github.com/jeffreykog/node-artnet-protocol';
         this.isController = isController;
         const interfaces = os.networkInterfaces();
         const prefixes = {};
@@ -87,7 +89,7 @@ class ArtNetController extends EventEmitter {
             this.intervalArtPoll = setInterval(this.artPollTimer.bind(this), 5000);
         }
         if (this.unicastAddress != null) {
-            this.sendBroadcastPacket(new protocol_1.ArtPollReply(this.unicastAddress, PORT, 0, 0, 0, 0xffff, 0));
+            this.sendArtPollReply();
         }
     }
     createUniverse(index) {
@@ -124,6 +126,12 @@ class ArtNetController extends EventEmitter {
         }
         this.socketBroadcast.setBroadcast(true);
         this.universes.forEach(universe => universe.start());
+    }
+    sendArtPollReply() {
+        const packet = new protocol_1.ArtPollReply(this.unicastAddress, PORT, 0, 0, 0, 0xffff, 0);
+        packet.nameShort = this.nameShort;
+        packet.nameLong = this.nameLong;
+        this.sendBroadcastPacket(packet);
     }
     onSocketMessage(socketType, msg, rinfo) {
         const packet = protocol_1.decode(msg);

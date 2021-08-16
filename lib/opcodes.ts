@@ -136,3 +136,5 @@ export const INDICATOR_LOCATE = 0x01;
 export const INDICATOR_MUTE = 0x02;
 // Indicators in Normal Mode.
 export const INDICATOR_NORMAL = 0x03;
+
+export const ESTA_EXPERIMENTAL = 0x7ff0;

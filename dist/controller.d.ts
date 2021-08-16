@@ -1,16 +1,17 @@
 /// <reference types="node" />
-import { Socket } from 'dgram';
 import { ArtNetPacket } from './protocol';
 import EventEmitter = require('events');
 export declare class ArtNetController extends EventEmitter {
     private readonly interfacePrefixes;
     private readonly isController;
-    socketUnicast?: Socket;
-    socketBroadcast?: Socket;
+    private socketUnicast?;
+    private socketBroadcast?;
     private broadcastAddress?;
     private unicastAddress?;
     private universes;
     private intervalArtPoll?;
+    nameShort: string;
+    nameLong: string;
     constructor(isController?: boolean);
     bind(host?: string): void;
     createUniverse(index: number): ArtNetUniverse;
@@ -19,6 +20,7 @@ export declare class ArtNetController extends EventEmitter {
     close(): Promise<void>;
     private onSocketError;
     private onSocketBroadcastListening;
+    private sendArtPollReply;
     private onSocketMessage;
     getUniverse(id: number): ArtNetUniverse;
 }

@@ -15,8 +15,8 @@ export class ArtNetController extends EventEmitter {
     private readonly interfacePrefixes: { [key: string]: ip6addr.CIDR };
     private readonly isController: boolean;
 
-    socketUnicast?: Socket;
-    socketBroadcast?: Socket;
+    private socketUnicast?: Socket;
+    private socketBroadcast?: Socket;
 
     private broadcastAddress?: string;
     private unicastAddress?: string;
@@ -24,6 +24,9 @@ export class ArtNetController extends EventEmitter {
     private universes: ArtNetUniverse[];
 
     private intervalArtPoll?: Timeout;
+
+    public nameShort: string = 'NodeArtNetProto';
+    public nameLong: string = 'https://github.com/jeffreykog/node-artnet-protocol';
 
     constructor(isController: boolean = false) {
         super();
@@ -99,7 +102,7 @@ export class ArtNetController extends EventEmitter {
 
         // Send ArtPollReply message to interface on startup, announcing ShowMaster as a controller.
         if (this.unicastAddress != null) {
-            this.sendBroadcastPacket(new ArtPollReply(this.unicastAddress, PORT, 0, 0, 0, 0xffff, 0));
+            this.sendArtPollReply();
         }
     }
 
@@ -141,6 +144,13 @@ export class ArtNetController extends EventEmitter {
         }
         this.socketBroadcast.setBroadcast(true);
         this.universes.forEach(universe => universe.start());
+    }
+
+    private sendArtPollReply() {
+        const packet = new ArtPollReply(this.unicastAddress!, PORT, 0, 0, 0, 0xffff, 0);
+        packet.nameShort = this.nameShort;
+        packet.nameLong = this.nameLong;
+        this.sendBroadcastPacket(packet);
     }
 
     private onSocketMessage(socketType: string, msg: Buffer, rinfo: RemoteInfo) {

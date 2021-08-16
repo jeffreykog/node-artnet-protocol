@@ -45,3 +45,4 @@ export declare const INDICATOR_UNKNOWN = 0;
 export declare const INDICATOR_LOCATE = 1;
 export declare const INDICATOR_MUTE = 2;
 export declare const INDICATOR_NORMAL = 3;
+export declare const ESTA_EXPERIMENTAL = 32752;

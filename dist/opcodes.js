@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.INDICATOR_NORMAL = exports.INDICATOR_MUTE = exports.INDICATOR_LOCATE = exports.INDICATOR_UNKNOWN = exports.PAPA_UNUSED = exports.PAPA_NETWORK = exports.PAPA_FRONT_PANEL_SET = exports.PAPA_UNKNOWN = exports.DP_VOLATILE = exports.DP_CRITICAL = exports.DP_HIGH = exports.DP_MED = exports.DP_LOW = exports.DP_ALL = exports.OP_DIRECTORY_REPLY = exports.OP_DIRECTORY = exports.OP_TRIGGER = exports.OP_TIME_SYNC = exports.OP_TIME_CODE = exports.OP_MEDIA_CONTROL_REPLY = exports.OP_MEDIA_CONTROL = exports.OP_MEDIA_PATCH = exports.OP_MEDIA = exports.OP_IP_PROG_REPLY = exports.OP_IP_PROG = exports.OP_FILE_FN_REPLY = exports.OP_FILE_FN_MASTER = exports.OP_FILE_TN_MASTER = exports.OP_FIRMWARE_REPLY = exports.OP_FIRMWARE_MASTER = exports.OP_VIDEO_DATA = exports.OP_VIDEO_PALETTE = exports.OP_VIDEO_SETUP = exports.OP_RDM_SUB = exports.OP_RDM = exports.OP_TOD_CONTROL = exports.OP_TOD_DATA = exports.OP_TOD_REQUEST = exports.OP_INPUT = exports.OP_ADDRESS = exports.OP_SYNC = exports.OP_NZS = exports.OP_OUTPUT = exports.OP_COMMAND = exports.OP_DIAG_DATA = exports.OP_POLL_REPLY = exports.OP_POLL = void 0;
+exports.ESTA_EXPERIMENTAL = exports.INDICATOR_NORMAL = exports.INDICATOR_MUTE = exports.INDICATOR_LOCATE = exports.INDICATOR_UNKNOWN = exports.PAPA_UNUSED = exports.PAPA_NETWORK = exports.PAPA_FRONT_PANEL_SET = exports.PAPA_UNKNOWN = exports.DP_VOLATILE = exports.DP_CRITICAL = exports.DP_HIGH = exports.DP_MED = exports.DP_LOW = exports.DP_ALL = exports.OP_DIRECTORY_REPLY = exports.OP_DIRECTORY = exports.OP_TRIGGER = exports.OP_TIME_SYNC = exports.OP_TIME_CODE = exports.OP_MEDIA_CONTROL_REPLY = exports.OP_MEDIA_CONTROL = exports.OP_MEDIA_PATCH = exports.OP_MEDIA = exports.OP_IP_PROG_REPLY = exports.OP_IP_PROG = exports.OP_FILE_FN_REPLY = exports.OP_FILE_FN_MASTER = exports.OP_FILE_TN_MASTER = exports.OP_FIRMWARE_REPLY = exports.OP_FIRMWARE_MASTER = exports.OP_VIDEO_DATA = exports.OP_VIDEO_PALETTE = exports.OP_VIDEO_SETUP = exports.OP_RDM_SUB = exports.OP_RDM = exports.OP_TOD_CONTROL = exports.OP_TOD_DATA = exports.OP_TOD_REQUEST = exports.OP_INPUT = exports.OP_ADDRESS = exports.OP_SYNC = exports.OP_NZS = exports.OP_OUTPUT = exports.OP_COMMAND = exports.OP_DIAG_DATA = exports.OP_POLL_REPLY = exports.OP_POLL = void 0;
 exports.OP_POLL = 0x2000;
 exports.OP_POLL_REPLY = 0x2100;
 exports.OP_DIAG_DATA = 0x2300;
@@ -48,4 +48,5 @@ exports.INDICATOR_UNKNOWN = 0x00;
 exports.INDICATOR_LOCATE = 0x01;
 exports.INDICATOR_MUTE = 0x02;
 exports.INDICATOR_NORMAL = 0x03;
+exports.ESTA_EXPERIMENTAL = 0x7ff0;
 //# sourceMappingURL=opcodes.js.map

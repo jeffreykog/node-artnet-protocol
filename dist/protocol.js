@@ -78,7 +78,10 @@ class ArtPollReply extends ArtNetPacket {
         this.statusRomBooted = false;
         this.statusPortAddressProgrammingAuthority = opcodes_1.PAPA_UNUSED;
         this.statusIndicatorState = opcodes_1.INDICATOR_NORMAL;
-        this.estaCode = 0;
+        this.estaCode = opcodes_1.ESTA_EXPERIMENTAL;
+        this.nameShort = "";
+        this.nameLong = "";
+        this.nodeReport = "";
         this.ipAddress = ipAddress;
         this.port = port;
         this.version = version;
@@ -99,11 +102,22 @@ class ArtPollReply extends ArtNetPacket {
         const subSwitch = data.readUInt8(9);
         const oem = data.readUInt16LE(10);
         const ubeaVersion = data.readUInt8(12);
-        return new ArtPollReply(ip, port, version, netSwitch, subSwitch, oem, ubeaVersion);
+        const status = data.readUInt8(13);
+        const result = new ArtPollReply(ip, port, version, netSwitch, subSwitch, oem, ubeaVersion);
+        result.statusIndicatorState = (status & 0b11000000) >> 6;
+        result.statusPortAddressProgrammingAuthority = (status & 0b00110000) >> 4;
+        result.statusRomBooted = (status & 0b00000100) === 0b00000100;
+        result.statusRdmSupported = (status & 0b00000010) === 0b00000010;
+        result.statusUbeaPresent = (status & 0b00000001) === 0b00000001;
+        result.estaCode = data.readUInt16LE(14);
+        result.nameShort = data.toString('ascii', 16, 33).replace(/\0.*$/g, '').trim();
+        result.nameLong = data.toString('ascii', 34, 97).replace(/\0.*$/g, '').trim();
+        result.nodeReport = data.toString('ascii', 98, 161).replace(/\0.*$/g, '').trim();
+        return result;
     }
     encode() {
         const header = super.encode();
-        const buffer = Buffer.alloc(13);
+        const buffer = Buffer.alloc(162);
         const ipParts = this.ipAddress.split('.');
         buffer.writeUInt8(parseInt(ipParts[0], 10), 0);
         buffer.writeUInt8(parseInt(ipParts[1], 10), 1);
@@ -115,7 +129,30 @@ class ArtPollReply extends ArtNetPacket {
         buffer.writeUInt8(this.subSwitch, 9);
         buffer.writeUInt16LE(this.oem, 10);
         buffer.writeUInt8(this.ubeaVersion, 12);
+        buffer.writeUInt8(this.encodeStatus(), 13);
+        buffer.writeUInt16LE(this.estaCode, 14);
+        buffer.write(this.nameShort, 16, 17, 'ascii');
+        buffer.writeUInt8(0, 33);
+        buffer.write(this.nameLong, 34, 63, 'ascii');
+        buffer.writeUInt8(0, 97);
+        buffer.write(this.nodeReport, 98, 63, 'ascii');
+        buffer.writeUInt8(0, 161);
         return Buffer.concat([header, buffer]);
+    }
+    encodeStatus() {
+        let status = 0;
+        status |= this.statusIndicatorState << 6;
+        status |= this.statusPortAddressProgrammingAuthority << 4;
+        if (this.statusRomBooted) {
+            status |= 0b00000100;
+        }
+        if (this.statusRdmSupported) {
+            status |= 0b00000010;
+        }
+        if (this.statusUbeaPresent) {
+            status |= 0b00000001;
+        }
+        return status;
     }
 }
 exports.ArtPollReply = ArtPollReply;

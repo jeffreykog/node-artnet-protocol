@@ -31,9 +31,13 @@ export declare class ArtPollReply extends ArtNetPacket {
     statusPortAddressProgrammingAuthority: number;
     statusIndicatorState: number;
     estaCode: number;
+    nameShort: string;
+    nameLong: string;
+    nodeReport: string;
     constructor(ipAddress: string, port: number, version: number, netSwitch: number, subSwitch: number, oem: number, ubeaVersion: number);
     static decode(data: Buffer): ArtPollReply;
     encode(): Buffer;
+    private encodeStatus;
 }
 export declare class ArtDmx extends ArtNetPacket {
     opcode: number;

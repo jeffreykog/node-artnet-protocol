@@ -1,4 +1,4 @@
-import { INDICATOR_NORMAL, OP_OUTPUT, OP_POLL, OP_POLL_REPLY, PAPA_UNUSED } from './opcodes';
+import { ESTA_EXPERIMENTAL, INDICATOR_NORMAL, OP_OUTPUT, OP_POLL, OP_POLL_REPLY, PAPA_UNUSED } from './opcodes';
 
 const header = Buffer.from([65, 114, 116, 45, 78, 101, 116, 0]);
 
@@ -97,7 +97,11 @@ export class ArtPollReply extends ArtNetPacket {
     statusPortAddressProgrammingAuthority = PAPA_UNUSED;
     statusIndicatorState = INDICATOR_NORMAL;
 
-    estaCode = 0;
+    estaCode = ESTA_EXPERIMENTAL;
+
+    nameShort: string = "";
+    nameLong: string = "";
+    nodeReport: string = "";
 
     constructor(ipAddress: string, port: number, version: number,
                 netSwitch: number, subSwitch: number, oem: number,
@@ -124,12 +128,23 @@ export class ArtPollReply extends ArtNetPacket {
         const subSwitch = data.readUInt8(9);
         const oem = data.readUInt16LE(10);
         const ubeaVersion = data.readUInt8(12);
-        return new ArtPollReply(ip, port, version, netSwitch, subSwitch, oem, ubeaVersion);
+        const status = data.readUInt8(13);
+        const result = new ArtPollReply(ip, port, version, netSwitch, subSwitch, oem, ubeaVersion);
+        result.statusIndicatorState = (status & 0b11000000) >> 6;
+        result.statusPortAddressProgrammingAuthority = (status & 0b00110000) >> 4;
+        result.statusRomBooted = (status & 0b00000100) === 0b00000100;
+        result.statusRdmSupported = (status & 0b00000010) === 0b00000010;
+        result.statusUbeaPresent = (status & 0b00000001) === 0b00000001;
+        result.estaCode = data.readUInt16LE(14);
+        result.nameShort = data.toString('ascii', 16, 33).replace(/\0.*$/g, '').trim();
+        result.nameLong = data.toString('ascii', 34, 97).replace(/\0.*$/g, '').trim();
+        result.nodeReport = data.toString('ascii', 98, 161).replace(/\0.*$/g, '').trim();
+        return result;
     }
 
     encode() {
         const header = super.encode();
-        const buffer = Buffer.alloc(13);  // 229
+        const buffer = Buffer.alloc(162);  // 229
         const ipParts = this.ipAddress.split('.');
         buffer.writeUInt8(parseInt(ipParts[0], 10), 0);
         buffer.writeUInt8(parseInt(ipParts[1], 10), 1);
@@ -141,7 +156,31 @@ export class ArtPollReply extends ArtNetPacket {
         buffer.writeUInt8(this.subSwitch, 9);
         buffer.writeUInt16LE(this.oem, 10);
         buffer.writeUInt8(this.ubeaVersion, 12);
+        buffer.writeUInt8(this.encodeStatus(), 13);
+        buffer.writeUInt16LE(this.estaCode, 14);
+        buffer.write(this.nameShort, 16, 17, 'ascii');
+        buffer.writeUInt8(0, 33);
+        buffer.write(this.nameLong, 34, 63, 'ascii');
+        buffer.writeUInt8(0, 97);
+        buffer.write(this.nodeReport, 98, 63, 'ascii');
+        buffer.writeUInt8(0, 161);
         return Buffer.concat([header, buffer]);
+    }
+
+    private encodeStatus(): number {
+        let status = 0;
+        status |= this.statusIndicatorState << 6;
+        status |= this.statusPortAddressProgrammingAuthority << 4;
+        if (this.statusRomBooted) {
+            status |= 0b00000100;
+        }
+        if (this.statusRdmSupported) {
+            status |= 0b00000010;
+        }
+        if (this.statusUbeaPresent) {
+            status |= 0b00000001;
+        }
+        return status;
     }
 }
 
