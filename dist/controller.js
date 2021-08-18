@@ -128,9 +128,10 @@ class ArtNetController extends EventEmitter {
         this.universes.forEach(universe => universe.start());
     }
     sendArtPollReply() {
-        const packet = new protocol_1.ArtPollReply(this.unicastAddress, PORT, 0, 0, 0, 0xffff, 0);
+        const packet = new protocol_1.ArtPollReply(this.unicastAddress, PORT, 0, 0, 0, 0xffff, 0, 1);
         packet.nameShort = this.nameShort;
         packet.nameLong = this.nameLong;
+        packet.portInfo[0] = new protocol_1.PortInfo(false, true, opcodes_1.PROTOCOL_DMX512);
         this.sendBroadcastPacket(packet);
     }
     onSocketMessage(socketType, msg, rinfo) {
@@ -143,9 +144,13 @@ class ArtNetController extends EventEmitter {
         }
         else if (packet instanceof protocol_1.ArtPoll) {
             console.log('ArtPoll', packet);
+            this.sendArtPollReply();
         }
         else if (packet instanceof protocol_1.ArtPollReply) {
             console.log('ArtPollReply', packet);
+        }
+        else {
+            console.log(packet.toString());
         }
     }
     getUniverse(id) {

@@ -1,7 +1,7 @@
 import { RemoteInfo, Socket } from 'dgram';
 import Timeout = NodeJS.Timeout;
-import { ArtDmx, ArtNetPacket, ArtPoll, ArtPollReply, decode } from './protocol';
-import { DP_ALL } from './opcodes';
+import { ArtDmx, ArtNetPacket, ArtPoll, ArtPollReply, decode, PortInfo } from './protocol';
+import { DP_ALL, PROTOCOL_DMX512 } from './opcodes';
 import * as dgram from 'dgram';
 import * as ip6addr from 'ip6addr';
 import * as os from 'os';
@@ -147,9 +147,10 @@ export class ArtNetController extends EventEmitter {
     }
 
     private sendArtPollReply() {
-        const packet = new ArtPollReply(this.unicastAddress!, PORT, 0, 0, 0, 0xffff, 0);
+        const packet = new ArtPollReply(this.unicastAddress!, PORT, 0, 0, 0, 0xffff, 0, 1);
         packet.nameShort = this.nameShort;
         packet.nameLong = this.nameLong;
+        packet.portInfo[0] = new PortInfo(false, true, PROTOCOL_DMX512);
         this.sendBroadcastPacket(packet);
     }
 
@@ -163,14 +164,12 @@ export class ArtNetController extends EventEmitter {
             this.emit("dmx", packet);
         } else if (packet instanceof ArtPoll) {
             console.log('ArtPoll', packet);
+            this.sendArtPollReply();
         } else if (packet instanceof ArtPollReply) {
             console.log('ArtPollReply', packet);
+        } else {
+            console.log(packet.toString());
         }
-
-        // TODO: Reply to all incoming ArtPoll packets
-        // if (!(packet instanceof protocol.ArtDmx)) {
-        //     console.log(packet.toString());
-        // }
     }
 
     public getUniverse(id: number) {

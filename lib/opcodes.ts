@@ -138,3 +138,30 @@ export const INDICATOR_MUTE = 0x02;
 export const INDICATOR_NORMAL = 0x03;
 
 export const ESTA_EXPERIMENTAL = 0x7ff0;
+
+export const PROTOCOL_DMX512 = 0x00;
+export const PROTOCOL_MIDI = 0x01;
+export const PROTOCOL_AVAB = 0x02;
+export const PROTOCOL_COLORTRAN_CMX = 0x03;
+export const PROTOCOL_ADB_625 = 0x04;
+export const PROTOCOL_ART_NET = 0x05;
+
+// A DMX to / from Art-Net device
+export const STYLE_NODE = 0x00;
+// A lighting console
+export const STYLE_CONTROLLER = 0x01;
+// A Media Server
+export const STYLE_MEDIA = 0x02;
+// A network routing device
+export const STYLE_ROUTE = 0x03;
+// A backup device
+export const STYLE_BACKUP = 0x04;
+// A configuration or diagnositc tool
+export const STYLE_CONFIG = 0x05;
+// A visualizer
+export const STYLE_VISUAL = 0x06;
+
+export const FOS_HOLD = 0x00;
+export const FOS_ALL_ZERO = 0x01;
+export const FOS_ALL_FULL = 0x02;
+export const FOS_PLAYBACK_FO_SCENE = 0x03;
