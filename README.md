@@ -1,8 +1,8 @@
 # Node ArtNet Protocol
 
-[![GitHub release](https://img.shields.io/github/release/jeffreykog/artnet-protocol.svg)](https://github.com/jeffreykog/node-artnet-protocol/releases)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
+[![GitHub release](https://img.shields.io/github/v/release/jeffreykog/node-artnet-protocol)](https://github.com/jeffreykog/node-artnet-protocol/releases)
 [![npm](https://img.shields.io/npm/v/artnet-protocol.svg)](https://www.npmjs.com/package/artnet-protocol)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
 
 ArtNet protocol implementation in Nodejs. The goal is to make a protocol implementation
 that is as complete and usable as possible.
