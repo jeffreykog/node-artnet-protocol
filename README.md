@@ -1,6 +1,6 @@
 # Node ArtNet Protocol
 
-[![GitHub release](https://img.shields.io/github/release/jeffreykog/nodejs-artnet-protocol.svg)](https://github.com/jeffreykog/node-artnet-protocol/releases)
+[![GitHub release](https://img.shields.io/github/release/jeffreykog/node-artnet-protocol.svg)](https://github.com/jeffreykog/node-artnet-protocol/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
 [![npm](https://img.shields.io/npm/v/artnet-protocol.svg)](https://www.npmjs.com/package/artnet-protocol)
 
