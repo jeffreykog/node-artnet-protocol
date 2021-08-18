@@ -38,3 +38,6 @@ controller.on('dmx', (dmx) => {
     console.log(dmx.universe, dmx.data);
 });
 ```
+
+## Reference
+* ArtNet protocol specification: https://artisticlicence.com/WebSiteMaster/User%20Guides/art-net.pdf
