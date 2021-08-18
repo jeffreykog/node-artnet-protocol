@@ -16,7 +16,7 @@
     "dmx"
   ],
   "author": "Jeffrey Kog <jeffrey@kog.nl>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/jeffreykog/node-artnet-protocol/issues"
   },

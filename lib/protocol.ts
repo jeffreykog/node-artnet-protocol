@@ -559,15 +559,14 @@ export class ArtPollReply extends ArtNetPacket {
 export class ArtDmx extends ArtNetPacket {
 
     opcode = OP_OUTPUT;
-    protocolVersion: number;
+    protocolVersion = 14;
     sequence: number;
     physical: number;
     universe: number;
     data: number[];
 
-    constructor(protocolVersion: number, sequence: number, physical: number, universe: number, data: number[]) {
+    constructor(sequence: number, physical: number, universe: number, data: number[]) {
         super();
-        this.protocolVersion = protocolVersion;
         this.sequence = sequence;
         this.physical = physical;
         this.universe = universe;
@@ -588,7 +587,9 @@ export class ArtDmx extends ArtNetPacket {
         for (let i = 0; i < length; i++) {
             dmxData.push(data.readUInt8(8 + i));
         }
-        return new ArtDmx(version, sequence, physical, universe, dmxData);
+        const result = new ArtDmx(sequence, physical, universe, dmxData);
+        result.protocolVersion = version;
+        return result;
     }
 
     encode() {

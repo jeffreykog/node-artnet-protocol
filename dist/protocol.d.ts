@@ -107,7 +107,7 @@ export declare class ArtDmx extends ArtNetPacket {
     physical: number;
     universe: number;
     data: number[];
-    constructor(protocolVersion: number, sequence: number, physical: number, universe: number, data: number[]);
+    constructor(sequence: number, physical: number, universe: number, data: number[]);
     isSequenceEnabled(): boolean;
     static decode(data: Buffer): ArtDmx;
     encode(): Buffer;

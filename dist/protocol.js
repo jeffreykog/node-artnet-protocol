@@ -471,10 +471,10 @@ class ArtPollReply extends ArtNetPacket {
 }
 exports.ArtPollReply = ArtPollReply;
 class ArtDmx extends ArtNetPacket {
-    constructor(protocolVersion, sequence, physical, universe, data) {
+    constructor(sequence, physical, universe, data) {
         super();
         this.opcode = opcodes_1.OP_OUTPUT;
-        this.protocolVersion = protocolVersion;
+        this.protocolVersion = 14;
         this.sequence = sequence;
         this.physical = physical;
         this.universe = universe;
@@ -493,7 +493,9 @@ class ArtDmx extends ArtNetPacket {
         for (let i = 0; i < length; i++) {
             dmxData.push(data.readUInt8(8 + i));
         }
-        return new ArtDmx(version, sequence, physical, universe, dmxData);
+        const result = new ArtDmx(sequence, physical, universe, dmxData);
+        result.protocolVersion = version;
+        return result;
     }
     encode() {
         const header = super.encode();
