@@ -1,6 +1,8 @@
 # Node ArtNet Protocol
 
+[![GitHub release](https://img.shields.io/github/release/jeffreykog/nodejs-artnet-protocol.svg)](https://github.com/jeffreykog/node-artnet-protocol/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.txt)
+[![npm](https://img.shields.io/npm/v/artnet-protocol.svg)](https://www.npmjs.com/package/artnet-protocol)
 
 ArtNet protocol implementation in Nodejs. The goal is to make a protocol implementation
 that is as complete and usable as possible.
@@ -13,6 +15,12 @@ or full ArtNet/DMX controllers.
 * Sending/receiving of DMX data (`ArtDmx`)
 
 ## Usage
+Install Node ArtNet Protocol using NPM:
+```shell
+$ npm install --save node-artnet-protocol
+```
+
+Code usage:
 ```javascript
 import { ArtNetController } from 'artnet-protocol/dist';
 import { ArtDmx } from 'artnet-protocol/dist/protocol';

@@ -8,7 +8,6 @@ import * as os from 'os';
 import EventEmitter = require('events');
 
 const PORT = 6454;
-const FRAMES_PER_SECOND = 44;
 
 export class ArtNetController extends EventEmitter {
 
@@ -20,8 +19,6 @@ export class ArtNetController extends EventEmitter {
 
     private broadcastAddress?: string;
     private unicastAddress?: string;
-
-    private universes: ArtNetUniverse[];
 
     private intervalArtPoll?: Timeout;
 
@@ -44,8 +41,6 @@ export class ArtNetController extends EventEmitter {
             });
         });
         this.interfacePrefixes = prefixes;
-
-        this.universes = [];
     }
 
     public bind(host?: string) {
@@ -106,12 +101,6 @@ export class ArtNetController extends EventEmitter {
         }
     }
 
-    public createUniverse(index: number) {
-        const universe = new ArtNetUniverse(this, index);
-        this.universes.push(universe);
-        return universe;
-    }
-
     public sendBroadcastPacket(packet: ArtNetPacket) {
         if (this.socketBroadcast == null) {
             return;
@@ -143,7 +132,6 @@ export class ArtNetController extends EventEmitter {
             return;
         }
         this.socketBroadcast.setBroadcast(true);
-        this.universes.forEach(universe => universe.start());
     }
 
     private sendArtPollReply() {
@@ -171,63 +159,4 @@ export class ArtNetController extends EventEmitter {
             console.log(packet.toString());
         }
     }
-
-    public getUniverse(id: number) {
-        return this.universes[id];
-    }
-}
-
-export class ArtNetUniverse {
-
-    private readonly controller: ArtNetController;
-    private readonly universe: number;
-    private readonly size: number;
-    private sequence: number;
-
-    private renderInterval?: Timeout;
-
-    private readonly renderCache: number[] = [];
-
-    constructor(controller: ArtNetController, universe: number, size?: number) {
-        this.controller = controller;
-        this.universe = universe;
-        this.size = size || 512;
-        this.sequence = 1;
-        this.renderCache.fill(0);
-    }
-
-    start() {
-        if (this.renderInterval == null) {
-            this.renderInterval = setInterval(this._renderLoop.bind(this), 1000 / FRAMES_PER_SECOND);
-        }
-    }
-
-    _renderLoop() {
-        // const channels = new Uint8Array(this.size);
-        // channels.fill(0);
-        // channels[1] = 255;
-        // channels[0] = 100;
-
-        const packet = new ArtDmx(14, this._nextSequence(), 0, this.universe, this.renderCache);
-        this.controller.sendBroadcastPacket(packet);
-    }
-
-    _nextSequence() {
-        if (this.sequence > 255) {
-            this.sequence = 1;
-        }
-        return this.sequence++;
-    }
-
-    public getChannel(channel: number) {
-        return this.renderCache[channel];
-    }
-
-    public setChannel(channel: number, value: number) {
-        this.renderCache[channel] = value;
-    }
-}
-
-class ArtNetChannel {
-    
 }
