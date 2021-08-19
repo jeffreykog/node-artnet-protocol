@@ -151,10 +151,8 @@ export class ArtNetController extends EventEmitter {
         if (packet instanceof ArtDmx) {
             this.emit("dmx", packet);
         } else if (packet instanceof ArtPoll) {
-            console.log('ArtPoll', packet);
             this.sendArtPollReply();
         } else if (packet instanceof ArtPollReply) {
-            console.log('ArtPollReply', packet);
         } else {
             console.log(packet.toString());
         }
