@@ -1,6 +1,6 @@
 {
   "name": "artnet-protocol",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Protocol implementation for ArtNet",
   "main": "./dist/index.js",
   "types": "./dist/index.d.js",
