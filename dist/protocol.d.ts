@@ -47,7 +47,7 @@ export declare class ArtPoll extends ArtNetPacket {
     sendDiagnosticsUnicast: boolean;
     disableVlc: boolean;
     priority: number;
-    constructor(protocolVersion: number, sendPollReplyOnChange: boolean, sendDiagnostics: boolean, sendDiagnosticsUnicast: boolean, disableVlc: boolean, priority: number);
+    constructor(sendPollReplyOnChange: boolean, sendDiagnostics: boolean, sendDiagnosticsUnicast: boolean, disableVlc: boolean, priority: number);
     static decode(data: Buffer): ArtPoll;
     encode(): Buffer;
 }
@@ -110,6 +110,12 @@ export declare class ArtDmx extends ArtNetPacket {
     constructor(sequence: number, physical: number, universe: number, data: number[]);
     isSequenceEnabled(): boolean;
     static decode(data: Buffer): ArtDmx;
+    encode(): Buffer;
+}
+export declare class ArtSync extends ArtNetPacket {
+    opcode: number;
+    protocolVersion: number;
+    static decode(data: Buffer): ArtSync;
     encode(): Buffer;
 }
 export declare function decode(msg: Buffer): ArtNetPacket | null;

@@ -44,18 +44,6 @@ export const OP_RDM = 0x8300;
 // This is an ArtRdmSub packet. It is used to send
 // compressed, RDM Sub-Device data.
 export const OP_RDM_SUB = 0x8400;
-// This is an ArtVideoSetup packet. It contains video
-// screen setup information for nodes that implement
-// the extended video features.
-export const OP_VIDEO_SETUP = 0xa010;
-// This is an ArtVideoPalette packet. It contains colour
-// palette setup information for nodes that implement
-// the extended video features.
-export const OP_VIDEO_PALETTE = 0xa020;
-// This is an ArtVideoData packet. It contains display
-// data for nodes that implement the extended video
-// features.
-export const OP_VIDEO_DATA = 0xa040;
 // This is an ArtFirmwareMaster packet. It is used to
 // upload new firmware or firmware extensions to the
 // Node.

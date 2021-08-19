@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.decode = exports.ArtDmx = exports.ArtPollReply = exports.ArtPoll = exports.ArtNetPacket = exports.OutputPortStatus = exports.InputPortStatus = exports.PortInfo = void 0;
+exports.decode = exports.ArtSync = exports.ArtDmx = exports.ArtPollReply = exports.ArtPoll = exports.ArtNetPacket = exports.OutputPortStatus = exports.InputPortStatus = exports.PortInfo = void 0;
 const opcodes_1 = require("./opcodes");
 const header = Buffer.from([65, 114, 116, 45, 78, 101, 116, 0]);
 class PortInfo {
@@ -154,10 +154,10 @@ class ArtNetPacket {
 }
 exports.ArtNetPacket = ArtNetPacket;
 class ArtPoll extends ArtNetPacket {
-    constructor(protocolVersion, sendPollReplyOnChange, sendDiagnostics, sendDiagnosticsUnicast, disableVlc, priority) {
+    constructor(sendPollReplyOnChange, sendDiagnostics, sendDiagnosticsUnicast, disableVlc, priority) {
         super();
         this.opcode = opcodes_1.OP_POLL;
-        this.protocolVersion = protocolVersion;
+        this.protocolVersion = 14;
         this.sendPollReplyOnChange = sendPollReplyOnChange;
         this.sendDiagnostics = sendDiagnostics;
         this.sendDiagnosticsUnicast = sendDiagnosticsUnicast;
@@ -172,7 +172,9 @@ class ArtPoll extends ArtNetPacket {
         const sendDiagnosticsUnicast = (talkToMe & 0b00001000) === 0b00001000;
         const disableVlc = (talkToMe & 0b00010000) === 0b00010000;
         const priority = data.readUInt8(3);
-        return new ArtPoll(version, sendPollReplyOnChange, sendDiagnostics, sendDiagnosticsUnicast, disableVlc, priority);
+        const result = new ArtPoll(sendPollReplyOnChange, sendDiagnostics, sendDiagnosticsUnicast, disableVlc, priority);
+        result.protocolVersion = version;
+        return result;
     }
     encode() {
         const header = super.encode();
@@ -512,6 +514,28 @@ class ArtDmx extends ArtNetPacket {
     }
 }
 exports.ArtDmx = ArtDmx;
+class ArtSync extends ArtNetPacket {
+    constructor() {
+        super(...arguments);
+        this.opcode = opcodes_1.OP_SYNC;
+        this.protocolVersion = 14;
+    }
+    static decode(data) {
+        const version = data.readUInt16BE(0);
+        const result = new ArtSync();
+        result.protocolVersion = version;
+        return result;
+    }
+    encode() {
+        const header = super.encode();
+        const buffer = Buffer.alloc(4);
+        buffer.writeUInt16BE(this.protocolVersion, 0);
+        buffer.writeUInt8(0, 2);
+        buffer.writeUInt8(0, 3);
+        return Buffer.concat([header, buffer]);
+    }
+}
+exports.ArtSync = ArtSync;
 function decode(msg) {
     if (msg.length < 10) {
         return null;
@@ -528,6 +552,8 @@ function decode(msg) {
             return ArtPollReply.decode(packetData);
         case opcodes_1.OP_OUTPUT:
             return ArtDmx.decode(packetData);
+        case opcodes_1.OP_SYNC:
+            return ArtSync.decode(packetData);
         default:
             console.log("Unknown packet type:", opCode);
             return null;

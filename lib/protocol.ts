@@ -3,7 +3,7 @@ import {
     INDICATOR_NORMAL,
     OP_OUTPUT,
     OP_POLL,
-    OP_POLL_REPLY,
+    OP_POLL_REPLY, OP_SYNC,
     PAPA_UNUSED,
     PROTOCOL_DMX512, STYLE_NODE
 } from './opcodes';
@@ -199,18 +199,17 @@ export class ArtPoll extends ArtNetPacket {
 
     opcode = OP_POLL;
 
-    protocolVersion: number;
+    protocolVersion = 14;
     sendPollReplyOnChange: boolean;
     sendDiagnostics: boolean;
     sendDiagnosticsUnicast: boolean;
     disableVlc: boolean;
     priority: number;
 
-    constructor(protocolVersion: number, sendPollReplyOnChange: boolean,
-                sendDiagnostics: boolean, sendDiagnosticsUnicast: boolean,
-                disableVlc: boolean, priority: number) {
+    constructor(sendPollReplyOnChange: boolean, sendDiagnostics: boolean,
+                sendDiagnosticsUnicast: boolean, disableVlc: boolean,
+                priority: number) {
         super();
-        this.protocolVersion = protocolVersion;
         this.sendPollReplyOnChange = sendPollReplyOnChange;
         this.sendDiagnostics = sendDiagnostics;
         this.sendDiagnosticsUnicast = sendDiagnosticsUnicast;
@@ -226,7 +225,9 @@ export class ArtPoll extends ArtNetPacket {
         const sendDiagnosticsUnicast = (talkToMe & 0b00001000) === 0b00001000;
         const disableVlc = (talkToMe & 0b00010000) === 0b00010000;
         const priority = data.readUInt8(3);
-        return new ArtPoll(version, sendPollReplyOnChange, sendDiagnostics, sendDiagnosticsUnicast, disableVlc, priority);
+        const result = new ArtPoll(sendPollReplyOnChange, sendDiagnostics, sendDiagnosticsUnicast, disableVlc, priority);
+        result.protocolVersion = version;
+        return result;
     }
 
     encode() {
@@ -607,6 +608,29 @@ export class ArtDmx extends ArtNetPacket {
     }
 }
 
+export class ArtSync extends ArtNetPacket {
+
+    opcode = OP_SYNC;
+
+    protocolVersion = 14;
+
+    static decode(data: Buffer) {
+        const version = data.readUInt16BE(0);
+        const result = new ArtSync();
+        result.protocolVersion = version;
+        return result;
+    }
+
+    encode() {
+        const header = super.encode();
+        const buffer = Buffer.alloc(4);
+        buffer.writeUInt16BE(this.protocolVersion, 0);
+        buffer.writeUInt8(0, 2);
+        buffer.writeUInt8(0, 3);
+        return Buffer.concat([header, buffer]);
+    }
+}
+
 export function decode(msg: Buffer): ArtNetPacket | null {
     if (msg.length < 10) {
         return null;
@@ -625,6 +649,9 @@ export function decode(msg: Buffer): ArtNetPacket | null {
 
         case OP_OUTPUT:
             return ArtDmx.decode(packetData);
+
+        case OP_SYNC:
+            return ArtSync.decode(packetData);
 
         default:
             console.log("Unknown packet type:", opCode);

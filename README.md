@@ -17,7 +17,7 @@ or full ArtNet/DMX controllers.
 ## Usage
 Install Node ArtNet Protocol using NPM:
 ```shell
-$ npm install --save node-artnet-protocol
+$ npm install --save artnet-protocol
 ```
 
 Code usage:
@@ -29,7 +29,7 @@ const controller = new ArtNetController();
 controller.bind('0.0.0.0');
 // The controller is now listening and responding to discovery traffic
 
-// Send DMX data (Sequence 0, Physical port 0, Universe 0.
+// Send DMX data (Sequence 0, Physical input port 0, Universe 0.
 controller.sendBroadcastPacket(new ArtDmx(0, 0, 0, [255, 0, 0]));
 
 // Or if you want to receive DMX data

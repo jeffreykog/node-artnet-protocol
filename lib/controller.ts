@@ -110,7 +110,7 @@ export class ArtNetController extends EventEmitter {
     }
 
     private artPollTimer() {
-        this.sendBroadcastPacket(new ArtPoll(14, true, true, true, false, DP_ALL));
+        this.sendBroadcastPacket(new ArtPoll(true, true, true, false, DP_ALL));
     }
 
     public async close() {
