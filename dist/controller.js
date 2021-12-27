@@ -98,7 +98,7 @@ class ArtNetController extends EventEmitter {
         this.socketBroadcast.send(buffer, 0, buffer.length, PORT, this.broadcastAddress);
     }
     artPollTimer() {
-        this.sendBroadcastPacket(new protocol_1.ArtPoll(14, true, true, true, false, opcodes_1.DP_ALL));
+        this.sendBroadcastPacket(new protocol_1.ArtPoll(true, true, true, false, opcodes_1.DP_ALL));
     }
     close() {
         return __awaiter(this, void 0, void 0, function* () {
